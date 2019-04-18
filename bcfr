@@ -1,0 +1,272 @@
+import os
+import pickle
+from multiprocessing import Pool
+import time
+from functools import partial
+import click
+import pkg_resources
+import gc
+import pandas as pd
+
+
+VERSION = pkg_resources.require("bcfr")[0].version
+
+@click.group()
+@click.version_option(version=VERSION, prog_name='bcfr')
+def solar():
+    """Bin map constructor for RILs with arbitrarily number of founders(parents) based on High_throughout Sequencing."""
+    pass
+    
+
+@click.command()
+@click.option('vcf','--v', required=True, type=str, help='A phased multi-sample vcf file as input, the founders/parents should be in front of all other samples.')
+@click.option('nfounder', '--n', required=True, type=int, help='Number of founders.')
+@click.option('CSdir', '--d', default=os.getcwd(), type=click.Path(), help='Directory for outputs.')
+def converter(vcf,nfounder,CSdir):
+    """Reformat genotype data."""
+    import exgt
+    import df2ss
+
+    CSdir=os.path.join(CSdir, '')
+    path=CSdir+"sheets/"
+    try:
+        os.makedirs(path,exist_ok=True)
+    except OSError:
+        print ("Creation of the directory %s failed" % path)
+    else:
+        print ("Successfully created the directory %s " % path)
+    exgt.pedgt(vcf,CSdir,nfounder)
+    df2ss.creatSheet(CSdir)
+    gc.collect()
+
+@click.command()
+@click.option('nfounder', '--n', required=True, type=int, help='Number of founders.')
+@click.option('CSdir', '--d', default=os.getcwd(), type=click.Path(), help='Directory for outputs which should be the same with that in command converter.')
+@click.option("ped", '--p', type=str, help='Pedigree file indicate which samples derived from a F1 individual. if pedigree file was offered, the ibd constraint will be calculated to refine the bin map.')
+@click.option('window', '--w', default=50000, type=int, help='Window size.')
+@click.option('step', '--s', default=10000, type=int, help='Step.')
+@click.option('ncpu','--c', default=1, type=int, help='Number of process to use.')
+@click.option("MIN_SNP_NUM_IN_WIN",'--x', default=4, type=int, help='The least number of SNPs included in a window. if the number is fewer than x, the window will be treated as invalid.')
+def birds(nfounder,CSdir,ped,window,step,ncpu,MIN_SNP_NUM_IN_WIN):
+    """Construct bin map."""
+    import flow_across_df
+    import ibd_constraint
+    import break_point
+    import opdin_mc
+    import maxparsi_mc
+    import divbin
+    import retrench
+    import fmb
+    import haplotype_info_indv
+    import implot
+
+    CSdir=os.path.join(CSdir, '')
+    pkl_path=CSdir+"pkls/"
+    try:
+        os.makedirs(pkl_path,exist_ok=True)
+    except OSError:
+        print ("Creation of the directory %s failed" % pkl_path)
+    else:
+        print ("Successfully created the directory %s " % pkl_path)
+
+    with open(CSdir+"chrom_names.txt","r") as f:
+           CHROM_NAMES= [x.rstrip('\n') for x in f]
+
+
+    print("IBS proportion......")
+    snkDic=dict()
+    for key in CHROM_NAMES:
+        snkDic[key]=flow_across_df.snow(key,win=window,step=step,wkdir=CSdir)
+
+    filiDic=dict()
+    for key in CHROM_NAMES:
+        filiDic[key]=flow_across_df.demn(key,nfd=nfounder,mc=ncpu,step=step,window=window,wkdir=CSdir)
+    with open(pkl_path+"snkfiliDic.pkl","wb") as f:
+        pickle.dump([snkDic,filiDic],f,pickle.HIGHEST_PROTOCOL)
+
+
+
+    print("Judge contributor of each window......")
+    if ped is not None:
+        foder=pd.read_csv(ped,sep="\t",header=None)
+        coliter=[]
+        for x,y in foder.groupby(foder.columns[0]):
+            coliter.append(y.iloc[:,1].tolist())
+        itcu=partial(ibd_constraint.itcu,cit=coliter)
+    else:
+        itcu=ibd_constraint.itcu
+
+    for key in filiDic:
+        ncs=[int(x>=MIN_SNP_NUM_IN_WIN) for x in snkDic[key] for _ in range(nfounder)]
+        filiDic[key]=filiDic[key].apply(ibd_constraint.sbs,ns=ncs)
+
+    start_time=time.time()
+    pool=Pool(processes=ncpu)
+    cstDic=dict(pool.starmap(itcu,filiDic.items()))
+    pool.close()
+    pool.join()
+    print("--- %s seconds ---" %(time.time()-start_time))
+
+    with open(pkl_path+"cstDic.pkl","wb") as f:
+        pickle.dump(cstDic,f,pickle.HIGHEST_PROTOCOL)
+    del filiDic
+
+
+    print("Recombination break point......")
+    xfhDic=cstDic
+    FOUNDER_NAMES=xfhDic[list(xfhDic.keys())[0]].loc[0,:].index.tolist()
+    bksDic=dict()
+    for key, value in xfhDic.items():
+        bksDic[key]=break_point.gick(key,value,ncpu,FOUNDER_NAMES,snkDic)
+
+    with open(pkl_path+"bksDic.pkl","wb") as f:
+        pickle.dump(bksDic,f,pickle.HIGHEST_PROTOCOL)
+    del snkDic
+    del cstDic
+
+    with open(CSdir+"pkls/binfo.pkl",'wb') as f:
+        pickle.dump([nfounder,CHROM_NAMES,FOUNDER_NAMES],f,pickle.HIGHEST_PROTOCOL)
+
+
+    haprDic=dict()
+    for k in bksDic:    
+        haprDic[k]=opdin_mc.aop(k,FOUNDER_NAMES,ncpu,bksDic[k],xfhDic[k])
+    with open(pkl_path+'haprDic.pkl','wb') as f:    
+        pickle.dump(haprDic,f,pickle.HIGHEST_PROTOCOL)
+    del bksDic
+
+
+    pool=Pool(processes=ncpu)
+    mpsDic=dict(pool.starmap(maxparsi_mc.cus,haprDic.items()))
+    with open(pkl_path+'mpsDic.pkl','wb') as f:    
+        pickle.dump(mpsDic,f,pickle.HIGHEST_PROTOCOL)    
+    del haprDic
+
+
+    print("Delineate bin map......")
+    xd=xfhDic[list(xfhDic.keys())[0]]
+    ril_lines=[x[0] for x in xd for _ in range(nfounder)]
+    diploid_pairs=(['s1']*nfounder+['s2']*nfounder)*int(xd.shape[1]/2)
+    fior=partial(divbin.rsl,fdname=FOUNDER_NAMES,lines=ril_lines,pairs=diploid_pairs)
+
+    start_time=time.time()
+    pool=Pool(processes=ncpu)
+    rwDic=dict(pool.starmap(fior,mpsDic.items()))
+    pool.close()
+    pool.join()
+    print("--- %s seconds ---" %(time.time()-start_time))
+
+    regDic=dict()
+    nbDic=dict()
+    for key in rwDic:
+        regDic[key]=rwDic[key][0]
+        nbDic[key]=rwDic[key][1]
+    with open(pkl_path+'regnbDic.pkl','wb') as f:    
+        pickle.dump([regDic,nbDic],f,pickle.HIGHEST_PROTOCOL)
+    del xd
+    del rwDic
+    del xfhDic
+    del mpsDic
+
+
+    trench=partial(retrench.retrench,nfd=nfounder)
+    kvp=[(key,nbDic[key],regDic[key]) for key in nbDic]
+    pool=Pool(processes=ncpu)
+    tulst=dict(pool.starmap(trench,kvp))
+    pool.close()
+    pool.join()
+
+
+    bsz=dict()
+    tdg=dict()
+    for key in tulst:
+        bsz[key],tdg[key] = tulst[key]
+    with open(pkl_path+'tchDic.pkl','wb') as f:
+        pickle.dump([bsz,tdg],f,pickle.HIGHEST_PROTOCOL)
+    del tulst
+    del regDic
+    del nbDic
+    del kvp
+
+
+    kvp=[(key,bsz[key],tdg[key],nfounder) for key in tdg]
+    pool=Pool(processes=ncpu)
+    bimp=dict(pool.starmap(fmb.hocf,kvp))
+    pool.close()
+    pool.join()
+
+    with open(pkl_path+'bimDic.pkl','wb') as f:
+        pickle.dump([bsz,bimp],f,pickle.HIGHEST_PROTOCOL)
+    del tdg
+    del kvp
+
+
+    print("Indivdual haplotype......")
+    power2=[2**x for x in range(nfounder)]
+    unil=[x[0] for x in bimp[list(bimp.keys())[0]]][::2]
+    cnm=["chrom","ixu","ixd","ppa","ppb","g1","g2"]
+
+    start_time=time.time()
+    dilp=partial(haplotype_info_indv.dilp,lnm=unil,scode=power2)
+    kvp=[(key,bimp[key],bsz[key])for key in CHROM_NAMES]
+    pool=Pool(processes=ncpu)
+    tpDic=dict(pool.starmap(dilp,kvp))
+    pool.close()
+    pool.join()
+    print("--- %s seconds ---" %(time.time()-start_time))
+
+    with open(pkl_path+'tpDic.pkl','wb') as f:
+        pickle.dump(tpDic,f,pickle.HIGHEST_PROTOCOL)
+
+    hpfDic=dict()
+    for i in range(len(unil)):
+        nlst=[]
+        for  key  in CHROM_NAMES:
+            item=tpDic[key][i]
+            nec=pd.DataFrame([key]*item.shape[0],index=item.index)
+            xps=pd.concat([nec,item],axis=1)
+            nlst.append(xps)
+        indv=pd.concat(nlst)
+        indv.columns=cnm
+        hpfDic[unil[i]]=indv
+
+    with open(pkl_path+'hpfDic.pkl','wb') as f:
+        pickle.dump(hpfDic,f,pickle.HIGHEST_PROTOCOL)
+    del kvp
+
+
+    coc=pd.Series(power2,index=FOUNDER_NAMES)
+    cvf=partial(implot.cvf,ss=coc)
+    pool=Pool(processes=ncpu)
+    imdic=dict(pool.starmap(cvf,bimp.items()))
+    pool.close()
+    pool.join()
+
+    ldf=[]
+    for key in CHROM_NAMES:
+        ldf.append(implot.ccvt(imdic[key],power2,nfounder))  
+    with open(pkl_path+'imdic.pkl','wb') as f:
+        pickle.dump(imdic,f,pickle.HIGHEST_PROTOCOL)      
+    implot.mosaic_plot(ldf,CHROM_NAMES,nfounder,FOUNDER_NAMES,CSdir)
+#end of birds
+
+@click.command()
+@click.option("sample", '--r', required=True, type=str, help="The name of RIL to plot")
+@click.option('CSdir', '--d', default=os.getcwd(), type=click.Path(), help='Directory for outputs which should be the same with that in command birds.')
+def plot_hap(sample,CSdir):
+    """Plot individual haplotype map."""
+    import indv_hap_plot
+    
+    CSdir=os.path.join(CSdir, '')
+    with open(CSdir+"pkls/binfo.pkl",'rb') as f:
+        nfounder,CHROM_NAMES,FOUNDER_NAMES=pickle.load(f)
+    with open(CSdir+'pkls/bimDic.pkl','rb') as f:
+        bsz,bimp=pickle.load(f)
+    indv_hap_plot.pinch(bsz,bimp,nfounder,sample,CHROM_NAMES,FOUNDER_NAMES,CSdir)
+
+solar.add_command(converter)
+solar.add_command(birds)
+solar.add_command(plot_hap)
+
+if __name__ == '__main__': # pragma: no cover
+        solar()
