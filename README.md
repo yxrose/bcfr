@@ -73,7 +73,8 @@ bin_size and bin_map are dictionary with chromosome names as key.  bin_size stor
 
 The individual-wise haplotype map data was **hpfDic.pkl**.
 
-The whole genome bin map chart was output as **whole_genome_bin_map.jpg**.
+The whole genome bin map chart was output as **whole_genome_bin_map.jpg**:
+![whole_genome_bin_map](https://raw.githubusercontent.com/yxrose/bcfr/master/screenshots/whole_genome_bin_map.png)
 
 
 
