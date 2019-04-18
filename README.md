@@ -20,7 +20,7 @@ Unzip the bcfr code and install
 
 ```
 tar -zxvf bcfr-1.0.tar.gz
-cd bcfr-1.0
+cd bcfr-master
 python setup.py install
 ```
 
