@@ -19,7 +19,7 @@ One important advantage in plant&animal genetic studies is the availability of e
 Unzip the bcfr code and install
 
 ```
-bcfr-master.zip
+unzip bcfr-master.zip
 cd bcfr-master
 python setup.py install
 ```
