@@ -26,11 +26,9 @@ python setup.py install
 
 # Usage
 
-List all the options and commands:
-
-```
-bcfr --help
-```
+Prepare the vcf file:
+1) Put the founders in front of all the other samples (the --indv parameter in vctools software)
+2) The genotype in VCF file should be phased（Beagle software）
 
 Convert the VCF file to bcfr format:
 
@@ -80,6 +78,13 @@ The whole genome bin map chart was output as **whole_genome_bin_map.jpg**:
 The plot-hap command  output individual haplotype map chart **haplotype_ril_individual_name.jpg**:
 
 ![haplotype](https://raw.githubusercontent.com/yxrose/bcfr/master/screenshots/haplotype.png)
+
+# Get help
+
+bcfr --help
+bcfr converter --help
+bcfr bird --help
+```
 
 # Contributor
 
