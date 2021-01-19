@@ -16,7 +16,7 @@ One important advantage in plant&animal genetic studies is the availability of e
 
 # Install
 
-Unzip the bcfr code and install
+## Unzip the bcfr code and install
 
 ```
 unzip bcfr-master.zip
@@ -26,32 +26,32 @@ python setup.py install
 
 # Usage
 
-Prepare the VCF file:
+## Prepare the VCF file:
 1) Put the founders in front of all the other samples in VCF file 
 ```
 bcftools view -S samples.txt input.vcf > output.vcf
 ```
 2) The genotype in VCF file should be imputed and phased（Beagle software）
 
-Convert the VCF file to bcfr format:
+## Convert the VCF file to bcfr format:
 
 ```
 bcfr converter --v my_genotypes.vcf --d output_dir --n number_of_founder 
 ```
 
- Construct bin map without pedigree:
+## Construct bin map without pedigree:
 
 ```
 bcfr birds --n number_of_founder --d output_dir
 ```
 
-Construct bin map with pedigree:
+## Construct bin map with pedigree:
 
 ```
 bcfr birds --n number_of_founder --d output_dir --p pedigree.txt
 ```
 
-Plot individual haplotype map:
+## Plot individual haplotype map:
 
 ```
 bcfr plot-hap --r ril_individual_name --d output_dir
