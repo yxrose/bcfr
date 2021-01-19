@@ -85,7 +85,7 @@ bcfr --help
 bcfr converter --help
 bcfr bird --help
 ```
-
+hanzm.vp@gmail.com
 # Contributor
 
 Zhongmin Han - National Key Laboratory of Crop Genetic Improvement, Huazhong Agriculture University
