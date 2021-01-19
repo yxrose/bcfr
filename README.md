@@ -28,7 +28,7 @@ python setup.py install
 
 Prepare the VCF file:
 1) Put the founders in front of all the other samples in VCF file (--indv parameter in vctools software)
-2) The genotype in VCF file should be phased（Beagle software）
+2) The genotype in VCF file should be imputed and phased（Beagle software）
 
 Convert the VCF file to bcfr format:
 
