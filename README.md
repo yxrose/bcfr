@@ -79,7 +79,7 @@ The plot-hap command  output individual haplotype map chart **haplotype_ril_indi
 
 ![haplotype](https://raw.githubusercontent.com/yxrose/bcfr/master/screenshots/haplotype.png)
 
-# Get help
+# Getting help
 ```
 bcfr --help
 bcfr converter --help
