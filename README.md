@@ -32,7 +32,7 @@ python setup.py install
 bcftools view -S samples.txt input.vcf > output.vcf
 ```
 2) The genotype in VCF file should be imputed and phased（Beagle software）
-
+The software in prepare step is freely available on internet 
 ## Convert the VCF file to bcfr format:
 
 ```
