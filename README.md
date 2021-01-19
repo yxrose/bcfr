@@ -26,8 +26,8 @@ python setup.py install
 
 # Usage
 
-Prepare the vcf file:
-1) Put the founders in front of all the other samples (the --indv parameter in vctools software)
+Prepare the VCF file:
+1) Put the founders in front of all the other samples in VCF file (the --indv parameter in vctools software)
 2) The genotype in VCF file should be phased（Beagle software）
 
 Convert the VCF file to bcfr format:
@@ -80,7 +80,7 @@ The plot-hap command  output individual haplotype map chart **haplotype_ril_indi
 ![haplotype](https://raw.githubusercontent.com/yxrose/bcfr/master/screenshots/haplotype.png)
 
 # Get help
-
+```
 bcfr --help
 bcfr converter --help
 bcfr bird --help
