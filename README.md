@@ -27,7 +27,10 @@ python setup.py install
 # Usage
 
 Prepare the VCF file:
-1) Put the founders in front of all the other samples in VCF file (bcftools view -S samples.txt input.vcf > output.vcf)
+1) Put the founders in front of all the other samples in VCF file 
+```
+bcftools view -S samples.txt input.vcf > output.vcf
+```
 2) The genotype in VCF file should be imputed and phased（Beagle software）
 
 Convert the VCF file to bcfr format:
