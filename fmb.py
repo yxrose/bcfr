@@ -31,8 +31,8 @@ def fmb(x,rit,dr,nfd):
             sl.append(cbin)
             continue
         ut,dt=fnn(x,i,dr,nfd=nfd)
-        ub=rit.loc[ut.index.get_values()[0][0],:][1]
-        db=rit.loc[dt.index.get_values()[0][0],:][0]
+        ub=rit.loc[ut.index.to_numpy()[0][0],:][1]
+        db=rit.loc[dt.index.to_numpy()[0][0],:][0]
         uz= ut.reset_index(level=0,drop=True)
         dz= dt.reset_index(level=0,drop=True)
         if(db-ub>=2000000):
