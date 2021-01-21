@@ -64,6 +64,6 @@ def mosaic_plot(nf,chrs,nfd,fdn,csdir):
     cb.set_ticks([x+0.5 for x in bounds])
     cb.set_ticklabels(fdn+['Non-unique', 'Missing'])
     
-    plt.savefig(csdir+"whole_genome_bin_map.jpg",dpi=1000,bbox_inches='tight')
+    plt.savefig(csdir+"whole_genome_bin_map.pdf",dpi=1000,bbox_inches='tight')
 
 
