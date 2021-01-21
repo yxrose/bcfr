@@ -87,5 +87,5 @@ def pinch(brp,bingt,nfd,fili,chrs,fdn,figdir):
     for i in range(len(col)):
         leg.legendHandles[i].set_color(col[i])
 
-    outfile="".join([figdir,"haplotype_",str(fili),".jpg"])
+    outfile="".join([figdir,"haplotype_",str(fili),".pdf"])
     plt.savefig(outfile,dpi=1000,bbox_inches='tight')
