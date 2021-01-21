@@ -54,7 +54,7 @@ def pinch(brp,bingt,nfd,fili,chrs,fdn,figdir):
     for key in bingt:
         mag[key]=bingt[key].loc[:,fili].unstack()
 
-    copan=['yellow', 'green', 'red', 'blue','gold','lime', 'pink','cyan']
+    copan=['green', 'red', 'yellow', 'blue','gold','lime', 'pink','cyan']
     wb=['grey', 'black']
     lcn=len(chrs)
     xpa=list(range(1,lcn*3+2,3)) 
