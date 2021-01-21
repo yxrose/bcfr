@@ -35,7 +35,7 @@ def mosaic_plot(nf,chrs,nfd,fdn,csdir):
     acrmat=pd.concat(ng,axis=0)
     wlr=acrmat.shape[1]/acrmat.shape[0]
     
-    copan=['yellow', 'green', 'red', 'blue','gold','lime', 'pink','cyan']
+    copan=['green', 'red', 'yellow', 'blue', 'gold','lime', 'pink','cyan']
     wb=['grey', 'black']
     col=copan[0:nfd]+wb
     zvals=acrmat.values
