@@ -84,8 +84,9 @@ The plot-hap command  output individual haplotype map chart **haplotype_ril_indi
 ![haplotype](https://raw.githubusercontent.com/yxrose/bcfr/master/screenshots/haplotype.png)
 
 # Postscript
-## statistic bin number，distribution，individual bin number or output a plain file
-## Start from the output file，make input file for R/qtl, R/MagicQTL
+Calculate bin number，distribution，individual bin number or output a plain file
+
+Start from the output file，make input file for R/qtl, R/MagicQTL
 
 # Getting help
 ```
