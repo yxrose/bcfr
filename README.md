@@ -89,11 +89,11 @@ The plot-hap command  output individual haplotype map chart **haplotype_ril_indi
 Calculate bin number，distribution，individual bin number or output a plain file
 
 Start from the output file，make input file for R/qtl, R/MagicQTL
-### convert to R/qtl input
+### Convert to R/qtl input
 ```
 bin2qtl.py
 ```
-### convert to R/MagicQTL input
+### Convert to R/MagicQTL input
 ```
 prepare_geno_for_magicQTL.py
 make_genome_for_magicQTL.r
