@@ -26,7 +26,7 @@ python setup.py install
 
 ## Usage
 
-### Prepare the VCF file:
+#### Prepare the VCF file:
 1) Put the founders in front of all the other samples in VCF file 
 ```
 bcftools view -S samples.txt input.vcf > output.vcf
@@ -34,25 +34,25 @@ bcftools view -S samples.txt input.vcf > output.vcf
 2) The genotype in VCF file should be imputed and phased（Beagle software）
 
 The software in prepare step is freely available on internet 
-### Convert the VCF file to bcfr input format:
+#### Convert the VCF file to bcfr input format:
 
 ```
 bcfr converter --v my_genotypes.vcf --d output_dir --n number_of_founder 
 ```
 
-### Construct bin map without pedigree:
+#### Construct bin map without pedigree:
 
 ```
 bcfr birds --n number_of_founder --d output_dir
 ```
 
-### Construct bin map with pedigree:
+#### Construct bin map with pedigree:
 
 ```
 bcfr birds --n number_of_founder --d output_dir --p pedigree.txt
 ```
 
-### Plot individual haplotype map:
+#### Plot individual haplotype map:
 
 ```
 bcfr plot-hap --r ril_individual_name --d output_dir
@@ -89,11 +89,11 @@ The plot-hap command  output individual haplotype map chart **haplotype_ril_indi
 Calculate bin number，distribution，individual bin number or output a plain file
 
 Start from the output file，make input file for R/qtl, R/MagicQTL
-### Convert to R/qtl input
+#### Convert to R/qtl input
 ```
 bin2qtl.py
 ```
-### Convert to R/MagicQTL input
+#### Convert to R/MagicQTL input
 ```
 prepare_geno_for_magicQTL.py
 make_genome_for_magicQTL.r
