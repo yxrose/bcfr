@@ -73,6 +73,8 @@ with open('bimDic.pkl','rb') as f:
 
 bin_size and bin_map are dictionary with chromosome names as key.  bin_size stores the start position and end position of each bin; bin_map stores the genotypes.
 
+the plain bin_size and bim_map file can be made by ```prepare_geno_for_magicQTL.py```
+
 The individual-wise haplotype map data was **hpfDic.pkl**.
 
 The whole genome bin map chart was output as **whole_genome_bin_map.jpg**:
