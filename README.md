@@ -88,10 +88,10 @@ Calculate bin number，distribution，individual bin number or output a plain fi
 
 Start from the output file，make input file for R/qtl, R/MagicQTL
 
-'''
+```
 prepare_geno_for_magicQTL.py
 make_genome_for_magicQTL.r
-'''
+```
 # Getting help
 ```
 bcfr --help
