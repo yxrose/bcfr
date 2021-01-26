@@ -34,7 +34,7 @@ bcftools view -S samples.txt input.vcf > output.vcf
 2) The genotype in VCF file should be imputed and phased（Beagle software）
 
 The software in prepare step is freely available on internet 
-## Convert the VCF file to bcfr format:
+## Convert the VCF file to bcfr input format:
 
 ```
 bcfr converter --v my_genotypes.vcf --d output_dir --n number_of_founder 
