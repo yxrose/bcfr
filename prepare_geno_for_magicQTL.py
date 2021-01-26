@@ -35,7 +35,7 @@ for key in fqDic:
 for key in regDic:
     stt=regDic[key].iloc[:,0]
     bnm=pd.Series(["".join(['bin_',str(x)]) for x in stt],index=stt.index)
-    ccc=pd.Series([int(key[4:])]*stt.size,index=stt.index)
+    ccc=pd.Series([int(key.lower().replace("chr","",2))]*stt.size,index=stt.index)
     cm=stt/250000
     mp=pd.concat([bnm,ccc,cm,stt],axis=1)
     mp.columns=['markers','chr','cm','bp']
