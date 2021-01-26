@@ -16,7 +16,7 @@ One important advantage in plant&animal genetic studies is the availability of e
 
 ## Install
 
-### Unzip the bcfr code and install
+### Unzip the bcfr package and install
 
 ```
 unzip bcfr-master.zip
