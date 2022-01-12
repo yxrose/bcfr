@@ -102,7 +102,7 @@ make_genome_for_magicQTL.r
 ```
 bcfr --help
 bcfr converter --help
-bcfr bird --help
+bcfr birds --help
 ```
 hanzm.vp@gmail.com
 ## Contributor
