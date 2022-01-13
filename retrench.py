@@ -12,6 +12,8 @@ def retrench(key,cgt,rgc,nfd):
     regout=[]
     nbout=[]
     a=range(1,rgc.shape[0])
+    if len(a)==0 :
+        return (key, [rgc,cgc])
     ct=cgt.iloc[a[-1]*nfd:(a[-1]*nfd+nfd),:]
     current=ct.reset_index(level=0,drop=True)
     mix=ct.index
