@@ -3,7 +3,7 @@ import pandas as pd
 import os  
 import numpy as np
 os.chdir('e:/project/C7HBK/emhet/script')
-with open('../pkls/binmap2.pkl','rb') as f:
+with open('../pkls/bimDic.pkl','rb') as f:
     reg,nb=pickle.load(f)
 
 #gt=nb['chr01']
