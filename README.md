@@ -93,6 +93,7 @@ Start from the output file，make input file for R/qtl, R/MagicQTL
 ```
 bin2qtl.py
 ```
+In the output file "CH_for_rqtl.csv", position is in Kb.
 #### Convert to R/MagicQTL input
 ```
 prepare_geno_for_magicQTL.py
