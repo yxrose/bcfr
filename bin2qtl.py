@@ -3,7 +3,7 @@ import pandas as pd
 import os  
 import numpy as np
 
-CSdir=os.path.join("output", '')
+CSdir=os.path.join("output_dir", '')
 NUM_OF_CHROM=12
 
 reg,nb=pd.read_pickle(CSdir+'/pkls/bimDic.pkl')
