@@ -14,7 +14,6 @@ One important advantage in plant&animal genetic studies is the availability of e
 
 * Matplotlib (>=1.5.0)
 
-* Curl
 
 ## Install
 
