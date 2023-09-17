@@ -138,7 +138,7 @@ Bin-based genome-wide association analyses improve power and resolution in QTL m
 
    4.1 Convert digits to boolean values, SO we can judge the RIL fragments comes from which parents. If the parents have abs proportion  larger than 95%, and differences of the value between parents are smaller than 0.1% ,  then these parents  are treated as the contributor for the RIL fragment and these parents TRUE. (A strict criteria：abs proportion > 99% and number of SNPs in a window > 4).
 
-​   4.2 The IBD relationships in MAGIC4w pybinXII was finished, but there need more works to let the code commonly used.
+​	4.2 The IBD relationships in MAGIC4w pybinXII was finished, but there need more works to let the code commonly used.
 
 5. break_points.py           used snkDic and cstDic   to generate bksDic
 
