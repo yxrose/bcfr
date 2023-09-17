@@ -120,7 +120,7 @@ Bin-based genome-wide association analyses improve power and resolution in QTL m
 ## Recommeded
 
 * Lots of memory and fast disk for large projects
-## the function  of each scripts
+## The function  of each scripts
 
 1. exgt.py	read vcf files from disk	write to disk
 
